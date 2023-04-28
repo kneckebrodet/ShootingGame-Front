@@ -7,7 +7,7 @@ mongo = MongoDBClient()
 mongo.connect_to_localhost()
 
 ## SET AND CONNECT TO MQTT
-mqtt_client = MQTTClient("172.19.5.61", 1883, "admin", "123")
+mqtt_client = MQTTClient("localhost", 1883, "admin", "123")
 mqtt_client.connect()
 
 ## OPEN NEW GAME WINDOW AND GET PLAYER NAME, SEND -START- SIGNAL TO BROKER
@@ -18,7 +18,7 @@ mqtt_client.publish("test", 1)
 ## OPEN THE COUNTDOWN WINDOW WHILE GAME IS RUNNING
 count_down_window = CountdownWindow()
 # choose timelimit of game
-count_down_window.run(6)
+count_down_window.run(15)
 
 ## RECIEVE EARNED POINTS FROM BROKER AND ADD TO DATABASE
 new_player_points = mqtt_client.subscribe("test")
