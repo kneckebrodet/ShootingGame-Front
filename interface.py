@@ -55,26 +55,46 @@ class NewGameWindow:
 
 class CountdownWindow:
     def __init__(self):
-        self.layout = [[sg.Text(key="time", font=("Arial", 400), pad=(35,0,0,0))]]
+        self.layout = [[sg.Text(text="",key="time", font=("Arial", 120), pad=(35,0,0,0))]]
 
         self.window = sg.Window("Countdown", self.layout, resizable=True, element_justification="c").finalize()
         self.window.Maximize()
 
 
-    def run(self, game_time=20):
+    def run(self):
 
-        time_remaining = game_time
+        GAME_TIME = 5
+        time_remaining = GAME_TIME
+        game_start = [3, "READY"]
 
         while True:
             event, values = self.window.read(timeout=1000)
-            time_remaining -= 1
-            if time_remaining == 3:
-                self.window['time'].update(text_color="red", font=("Arial", 450))
-            self.window['time'].update(time_remaining)
+
+            if game_start[0] != 0:
+                self.window['time'].update(f"{game_start[1]}", font=("Arial", 300), text_color="green")
+                if game_start[1] == "READY":
+                    game_start[1] = "SET"
+                    game_start[0] -= 1
+                elif game_start[1] == "SET":
+                    game_start[1] = "GO!"
+                    game_start[0] -= 1
+                else:
+                    game_start[0] -= 1
+                    self.window['time'].update(text_color="red", font=("Arial", 400))
+
+
+            else:
+                if time_remaining < 4:
+                    self.window['time'].update(text_color="red", font=("Arial", 450))
+                    self.window['time'].update(time_remaining)
+                    time_remaining -= 1
+                else:
+                    self.window['time'].update(time_remaining, font=("Arial", 400), text_color="white")
+                    time_remaining -= 1
 
             if event == sg.WIN_CLOSED:
                 self.window.close()
                 break
-            if time_remaining == 0:
+            if time_remaining == -1:
                 self.window.close()
                 break
