@@ -18,7 +18,7 @@ class MQTTClient:
 
     def on_message(self, client, userdata, message):
         print(f"Received message '{str(message.payload.decode())}' on topic '{message.topic}'")
-        self.points = str(message.payload.decode())
+        self.points = message.payload.decode()
         self.client.disconnect()
 
     def connect(self):
@@ -30,4 +30,6 @@ class MQTTClient:
     def subscribe(self, topic):
         self.client.subscribe(topic)
         self.client.loop_forever()
+
+    def get_points(self):
         return int(self.points)
