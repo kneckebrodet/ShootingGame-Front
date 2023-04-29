@@ -12,20 +12,21 @@ class RankingWindow:
         self.layout = [
             [sg.Text("TODAYS RANKING:", font=("Helvetica", 40), justification='center', size=(50,1), text_color="purple")],
             [sg.Column(ranking_layout[:9])],
-            [sg.Button("New Game", button_color=('white', 'green'), size=(15, 1), font=("Helvetica", 14))],
+            [sg.Button("New Game", button_color=('white', 'green'), size=(15, 1), font=("Helvetica", 14)), 
+             sg.Button("Exit", button_color=('white', 'red'), size=(15, 1), font=("Helvetica", 14))],
         ]
-
         self.window = sg.Window("SHOOTING GAME", self.layout, resizable=True, size=(800, 600), element_justification="c").finalize()
         self.window.Maximize()
 
     def run(self):
         while True:
             event, values = self.window.read()
-            if event == sg.WIN_CLOSED:
+            if event == sg.WIN_CLOSED or event == "Exit":
                 self.window.close()
-                return 1
+                return 0
             elif event == "New Game":
                 self.window.close()
+                return 1
 
 
 class NewGameWindow:
@@ -63,15 +64,16 @@ class CountdownWindow:
 
     def run(self):
 
-        GAME_TIME = 5
-        time_remaining = GAME_TIME
+        game_time = 5
+        red_time = 3
+        time_remaining = game_time
         game_start = [3, "READY"]
 
         while True:
             event, values = self.window.read(timeout=1000)
 
             if game_start[0] != 0:
-                self.window['time'].update(f"{game_start[1]}", font=("Arial", 300), text_color="green")
+                self.window['time'].update(f"{game_start[1]}", font=("Arial", 250), text_color="green")
                 if game_start[1] == "READY":
                     game_start[1] = "SET"
                     game_start[0] -= 1
@@ -84,17 +86,19 @@ class CountdownWindow:
 
 
             else:
-                if time_remaining < 4:
-                    self.window['time'].update(text_color="red", font=("Arial", 450))
-                    self.window['time'].update(time_remaining)
-                    time_remaining -= 1
+                if time_remaining <= red_time:
+                    self.window['time'].update(time_remaining, text_color="red", font=("Arial", 450))
                 else:
                     self.window['time'].update(time_remaining, font=("Arial", 400), text_color="white")
-                    time_remaining -= 1
+                time_remaining -= 1
 
             if event == sg.WIN_CLOSED:
                 self.window.close()
                 break
             if time_remaining == -1:
-                self.window.close()
+                self.window['time'].update("GAME FINISHED", font=("Arial", 50), text_color="white")
+            if time_remaining == -2:
                 break
+
+    def close_window(self):
+        self.window.close()
