@@ -1,7 +1,6 @@
 from mongodb import MongoDB
 from interface import NewGameWindow, CountdownWindow, RankingWindow
 from mqtt import MQTTClient
-import threading
 
 ## Set and connect to database
 mongo = MongoDB()
