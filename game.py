@@ -1,4 +1,4 @@
-from mongodb import MongoDB
+from database import MongoDB
 from interface import NewGameWindow, CountdownWindow, RankingWindow
 from mqtt import MQTTClient
 
@@ -6,15 +6,16 @@ from mqtt import MQTTClient
 mongo = MongoDB()
 mongo.connect_to_localhost()
 
-## SET and connect to MQTT
-mqtt_client = MQTTClient("broker_address", 1883, "username", "password")
-mqtt_client.connect()
-
 game_status = 1
 while game_status:
     ## Open a new-game window and get the player name
     new_game_window = NewGameWindow()
     new_player_name = new_game_window.run()
+
+    ## SET and connect to MQTT
+    mqtt_client = MQTTClient("broker_address", 1883, "username", "password")
+    mqtt_client.connect()
+    
     # Send start signal to broker
     mqtt_client.publish("topic", 1)
 
