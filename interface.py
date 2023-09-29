@@ -64,7 +64,7 @@ class CountdownWindow:
 
     def run(self):
 
-        game_time = 5
+        game_time = 20
         red_time = 3
         time_remaining = game_time
         game_start = [3, "READY"]
